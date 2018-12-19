@@ -1,4 +1,5 @@
 class MusicEngine:
+    is_playing = False
 
     @staticmethod
     def play():
