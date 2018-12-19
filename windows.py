@@ -56,6 +56,10 @@ class MainWindow(Tk):
         if not (self.source_dir and self.dest_dir):
             return
 
+        if self.file_engine.get_files_count() == 0:
+            print("There is no files")
+            return
+
         if not self.music_engine.is_playing:
             self.music_engine.play()
             self.playpauseButton["text"] = "pause"
@@ -67,28 +71,57 @@ class MainWindow(Tk):
     def onChooseSourceDirButtonClick(self):
         self.logger.debug("Button ChooseSourceDir was presses")
         new_path = filedialog.askdirectory(initialdir="~", title="Select source directory", mustexist=True)
-        if len(new_path) > 0:
-            self.source_dir = new_path
-            self.logger.debug("Choosed source directory: %s" % self.source_dir)
-            self.file_engine.find_source_files(self.source_dir, self.music_engine.formats)
-        else:
+        if not new_path:
             self.logger.debug("Source directory was not been chosen")
+            return
+
+        self.source_dir = new_path
+        self.logger.debug("Choosed source directory: %s" % self.source_dir)
+
+        self.file_engine.find_source_files(self.source_dir, self.music_engine.formats)
+        if self.file_engine.get_files_count() == 0:
+            print("There is no files")
+        else:
+            self.music_engine.current_file = self.file_engine.get_current_file()
+        return
 
     def onChooseDestDirButtonClick(self):
         self.logger.debug("Button ChooseDestDir was presses")
         new_path = filedialog.askdirectory(initialdir="~", title="Select destination directory", mustexist=True)
-        if len(new_path) > 0:
-            self.dest_dir = new_path
-            self.logger.debug("Choosed destination directory: %s" % self.dest_dir)
-        else:
+        if not new_path:
             self.logger.debug("Destination directory was not been chosen")
+            return
+
+        self.dest_dir = new_path
+        self.logger.debug("Choosed destination directory: %s" % self.dest_dir)
+        return
 
     def onLikeButtonClick(self):
         self.logger.debug("Button LikeButton was presses")
-        print("like")
+        if self.music_engine.is_playing:
+            self.music_engine.stop()
+        self.file_engine.move_current_file(self.dest_dir)
+
+        if self.file_engine.get_files_count() == 0:
+            print("There is no files")
+            return
+
+        self.music_engine.current_file = self.file_engine.get_current_file()
+        self.music_engine.play()
+        self.playpauseButton["text"] = "pause"
         pass
 
     def onDislikeButtonClick(self):
         self.logger.debug("Button DislikeButton was presses")
-        print("dislike")
+        if self.music_engine.is_playing:
+            self.music_engine.stop()
+        self.file_engine.delete_current_file()
+
+        if self.file_engine.get_files_count() == 0:
+            print("There is no files")
+            return
+
+        self.music_engine.current_file = self.file_engine.get_current_file()
+        self.music_engine.play()
+        self.playpauseButton["text"] = "pause"
         pass
