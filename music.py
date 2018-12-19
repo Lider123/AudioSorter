@@ -1,5 +1,6 @@
 class MusicEngine:
     is_playing = False
+    formats = ("mp3", )
 
     @staticmethod
     def play():

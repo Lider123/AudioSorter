@@ -1,7 +1,7 @@
+from engine import Engine
 from music import MusicEngine
 from tkinter import Label, Button, filedialog, Tk
 import log
-import tkinter as tk
 
 
 class MainWindow(Tk):
@@ -13,6 +13,8 @@ class MainWindow(Tk):
         self.source_dir = ""
         self.dest_dir = ""
         self.logger = log.logger
+        self.engine = Engine()
+
         self.setup()
 
     def setup(self):
@@ -43,6 +45,15 @@ class MainWindow(Tk):
 
     def onPlayPauseButtonClick(self):
         self.logger.debug("PlayPauseButton was pressed")
+        if not self.source_dir:
+            self.logger.debug("No chosen source directory. Redirecting to dialog window")
+            self.onChooseSourceDirButtonClick()
+        if not self.dest_dir:
+            self.logger.debug("No chosen destination directory. Redirecting to dialog window")
+            self.onChooseDestDirButtonClick()
+        if not (self.source_dir and self.dest_dir):
+            return
+
         if not MusicEngine.is_playing:
             MusicEngine.play()
             MusicEngine.is_playing = True
@@ -55,26 +66,29 @@ class MainWindow(Tk):
 
     def onChooseSourceDirButtonClick(self):
         self.logger.debug("Button ChooseSourceDir was presses")
-        new_path = filedialog.askdirectory(initialdir="~", title="Select directory", mustexist=True)
+        new_path = filedialog.askdirectory(initialdir="~", title="Select source directory", mustexist=True)
         if len(new_path) > 0:
             self.source_dir = new_path
-            self.logger.debug("Choosed directory: %s" % self.source_dir)
+            self.logger.debug("Choosed source directory: %s" % self.source_dir)
+            self.engine.find_source_files(self.source_dir)
         else:
-            self.logger.debug("Directory was not been chosen")
+            self.logger.debug("Source directory was not been chosen")
 
     def onChooseDestDirButtonClick(self):
         self.logger.debug("Button ChooseDestDir was presses")
-        new_path = filedialog.askdirectory(initialdir="~", title="Select directory", mustexist=True)
+        new_path = filedialog.askdirectory(initialdir="~", title="Select destination directory", mustexist=True)
         if len(new_path) > 0:
             self.dest_dir = new_path
-            self.logger.debug("Choosed directory: %s" % self.dest_dir)
+            self.logger.debug("Choosed destination directory: %s" % self.dest_dir)
         else:
-            self.logger.debug("Directory was not been chosen")
+            self.logger.debug("Destination directory was not been chosen")
 
     def onLikeButtonClick(self):
         self.logger.debug("Button LikeButton was presses")
+        print("like")
         pass
 
     def onDislikeButtonClick(self):
         self.logger.debug("Button DislikeButton was presses")
+        print("dislike")
         pass
