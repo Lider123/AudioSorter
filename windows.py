@@ -1,4 +1,4 @@
-from engine import Engine
+from engine import FileEngine
 from music import MusicEngine
 from tkinter import Label, Button, filedialog, Tk
 import log
@@ -12,8 +12,10 @@ class MainWindow(Tk):
         self.HEIGHT = 600
         self.source_dir = ""
         self.dest_dir = ""
+
         self.logger = log.logger
-        self.engine = Engine()
+        self.file_engine = FileEngine()
+        self.music_engine = MusicEngine()
 
         self.setup()
 
@@ -54,13 +56,11 @@ class MainWindow(Tk):
         if not (self.source_dir and self.dest_dir):
             return
 
-        if not MusicEngine.is_playing:
-            MusicEngine.play()
-            MusicEngine.is_playing = True
+        if not self.music_engine.is_playing:
+            self.music_engine.play()
             self.playpauseButton["text"] = "pause"
         else:
-            MusicEngine.pause()
-            MusicEngine.is_playing = False
+            self.music_engine.pause()
             self.playpauseButton["text"] = "play"
         return
 
@@ -70,7 +70,7 @@ class MainWindow(Tk):
         if len(new_path) > 0:
             self.source_dir = new_path
             self.logger.debug("Choosed source directory: %s" % self.source_dir)
-            self.engine.find_source_files(self.source_dir)
+            self.file_engine.find_source_files(self.source_dir, self.music_engine.formats)
         else:
             self.logger.debug("Source directory was not been chosen")
 

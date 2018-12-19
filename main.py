@@ -5,11 +5,11 @@ import log
 class App:
     def __init__(self):
         self.logger = log.logger
-        self.logger.debug('logger started')
+        self.logger.debug('Logger started')
 
     def run(self):
         main_window = MainWindow()
-        self.logger.debug("app started")
+        self.logger.debug("App started")
         main_window.mainloop()
 
 if __name__ == "__main__":
