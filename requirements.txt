@@ -1,1 +1,2 @@
+pygame
 Send2Trash

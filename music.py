@@ -1,27 +1,49 @@
-from threading import Thread
 import log
+import pygame
 
 
 class MusicEngine:
-    def __init__(self):
+    def __init__(self, master):
         self.is_playing = False
-        self.formats = ("mp3", "sql")  # TODO: Change formats to correct
+        self.paused = False
+        self.formats = ("mp3",)
         self.logger = log.logger
         self.current_file = None
-        self.music_thread = Thread()
+        self.master_button = master
+        pygame.init()
         self.logger.debug("Music engine started")
+
+    def set_file(self, path):
+        self.current_file = path
+        if path is not None:
+            pygame.mixer.music.load(self.current_file)
+        self.is_playing = False
+        self.paused = False
+        self.master_button["text"] = "play"
+        return
 
     def play(self):
         self.is_playing = True
-        print("Playing file %s" % self.current_file)
-        pass
+        if self.paused:
+            pygame.mixer.music.unpause()
+        else:
+            pygame.mixer.music.play()
+            self.logger.debug("Playing file %s" % self.current_file)
+        self.master_button["text"] = "pause"
+        return
 
     def pause(self):
         self.is_playing = False
-        print("Music paused")
-        pass
+        self.paused = True
+        pygame.mixer.music.pause()
+        self.master_button["text"] = "play"
+        self.logger.debug("Music paused")
+        return
 
     def stop(self):
         self.is_playing = False
-        print("Music stopped")
-        pass
+        self.paused = False
+        pygame.mixer.music.stop()
+        self.master_button["text"] = "play"
+        self.logger.debug("Music stopped")
+        return

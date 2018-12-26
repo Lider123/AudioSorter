@@ -2,6 +2,7 @@ from engine import FileEngine
 from music import MusicEngine
 from tkinter import Label, Button, filedialog, messagebox, Tk
 import log
+import os
 
 
 class MainWindow(Tk):
@@ -14,10 +15,11 @@ class MainWindow(Tk):
         self.dest_dir = ""
 
         self.logger = log.logger
-        self.file_engine = FileEngine()
-        self.music_engine = MusicEngine()
 
         self.setup()
+
+        self.file_engine = FileEngine()
+        self.music_engine = MusicEngine(self.playpauseButton)
 
     def setup(self):
         self.title("AudioSorter")
@@ -66,14 +68,14 @@ class MainWindow(Tk):
 
         if not self.music_engine.is_playing:
             self.music_engine.play()
-            self.playpauseButton["text"] = "pause"
         else:
             self.music_engine.pause()
-            self.playpauseButton["text"] = "play"
         return
 
     def onChooseSourceDirButtonClick(self):
         self.logger.debug("Button ChooseSourceDir was presses")
+        self.stop_playing()
+
         new_path = filedialog.askdirectory(initialdir="~", title="Select source directory", mustexist=True)
         if not new_path:
             self.logger.debug("Source directory was not been chosen")
@@ -84,7 +86,7 @@ class MainWindow(Tk):
 
         self.file_engine.find_source_files(self.source_dir, self.music_engine.formats)
         if self.check_files_count():
-            self.music_engine.current_file = self.file_engine.get_current_file()
+            self.music_engine.set_file(self.fullpath(self.file_engine.get_current_file()))
         return
 
     def onChooseDestDirButtonClick(self):
@@ -108,7 +110,7 @@ class MainWindow(Tk):
         self.file_engine.move_current_file(self.source_dir, self.dest_dir)
 
         if not self.file_engine.get_files_count():
-            self.music_engine.current_file = None
+            self.music_engine.set_file(None)
         else:
             self.play_next()
         return
@@ -123,21 +125,19 @@ class MainWindow(Tk):
         self.file_engine.delete_current_file(self.source_dir)
 
         if not self.file_engine.get_files_count():
-            self.music_engine.current_file = None
+            self.music_engine.set_file(None)
         else:
             self.play_next()
         return
 
     def play_next(self):
-        self.music_engine.current_file = self.file_engine.get_current_file()
+        self.music_engine.set_file(self.fullpath(self.file_engine.get_current_file()))
         self.music_engine.play()
-        self.playpauseButton["text"] = "pause"
         return
 
     def stop_playing(self):
         if self.music_engine.is_playing:
             self.music_engine.stop()
-            self.playpauseButton["text"] = "play"
         return
 
     def check_files_count(self):
@@ -145,3 +145,6 @@ class MainWindow(Tk):
             messagebox.showinfo("Info", "There are no files in source directory")
             return False
         return True
+
+    def fullpath(self, path):
+        return os.path.join(self.source_dir, path)
