@@ -1,3 +1,4 @@
+from send2trash import send2trash
 import errno
 import log
 import os
@@ -42,7 +43,7 @@ class FileEngine:
     def delete_current_file(self, src):
         curr_file = self.get_current_file()
         fullpath = os.path.join(src, curr_file)
-        os.remove(fullpath)
+        send2trash(fullpath)
 
         self.logger.debug("File %s was deleted" % curr_file)
         self.source_files.pop(0)

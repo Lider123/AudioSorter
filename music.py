@@ -5,7 +5,7 @@ import log
 class MusicEngine:
     def __init__(self):
         self.is_playing = False
-        self.formats = ("mp3", "sql")
+        self.formats = ("mp3", "sql")  # TODO: Change formats to correct
         self.logger = log.logger
         self.current_file = None
         self.music_thread = Thread()
