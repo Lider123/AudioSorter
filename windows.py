@@ -60,9 +60,8 @@ class MainWindow(Tk):
             return
 
         """If there are no files in source directory"""
-        if self.file_engine.get_files_count() == 0:
+        if not self.check_files_count():
             self.logger.debug("There are no files in directory %s" % self.source_dir)
-            messagebox.showinfo("Info", "There are no files in source directory")
             return
 
         if not self.music_engine.is_playing:
@@ -84,9 +83,7 @@ class MainWindow(Tk):
         self.logger.debug("Choosed source directory: %s" % self.source_dir)
 
         self.file_engine.find_source_files(self.source_dir, self.music_engine.formats)
-        if not self.file_engine.get_files_count():
-            messagebox.showinfo("Info", "There are no files in source directory")
-        else:
+        if self.check_files_count():
             self.music_engine.current_file = self.file_engine.get_current_file()
         return
 
@@ -104,35 +101,47 @@ class MainWindow(Tk):
     def onLikeButtonClick(self):
         self.logger.debug("Button LikeButton was presses")
 
-        if not self.file_engine.get_files_count():
-            messagebox.showinfo("Info", "There are no files in source directory")
+        if not self.check_files_count():
             return
 
-        if self.music_engine.is_playing:
-            self.music_engine.stop()
-            self.playpauseButton["text"] = "play"
+        self.stop_playing()
         self.file_engine.move_current_file(self.source_dir, self.dest_dir)
 
         if not self.file_engine.get_files_count():
             self.music_engine.current_file = None
-            return
-
-        self.music_engine.current_file = self.file_engine.get_current_file()
-        self.music_engine.play()
-        self.playpauseButton["text"] = "pause"
+        else:
+            self.play_next()
+        return
 
     def onDislikeButtonClick(self):
         self.logger.debug("Button DislikeButton was presses")
 
-        if not self.file_engine.get_files_count():
-            messagebox.showinfo("Info", "There are no files in source directory")
+        if not self.check_files_count():
             return
 
-        if self.music_engine.is_playing:
-            self.music_engine.stop()
-            self.playpauseButton["text"] = "play"
+        self.stop_playing()
         self.file_engine.delete_current_file(self.source_dir)
 
+        if not self.file_engine.get_files_count():
+            self.music_engine.current_file = None
+        else:
+            self.play_next()
+        return
+
+    def play_next(self):
         self.music_engine.current_file = self.file_engine.get_current_file()
         self.music_engine.play()
         self.playpauseButton["text"] = "pause"
+        return
+
+    def stop_playing(self):
+        if self.music_engine.is_playing:
+            self.music_engine.stop()
+            self.playpauseButton["text"] = "play"
+        return
+
+    def check_files_count(self):
+        if not self.file_engine.get_files_count():
+            messagebox.showinfo("Info", "There are no files in source directory")
+            return False
+        return True
