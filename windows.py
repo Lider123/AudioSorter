@@ -1,6 +1,6 @@
 from engine import FileEngine
 from music import MusicEngine
-from tkinter import Label, Button, filedialog, Tk
+from tkinter import Label, Button, filedialog, messagebox, Tk
 import log
 
 
@@ -62,7 +62,7 @@ class MainWindow(Tk):
         """If there are no files in source directory"""
         if self.file_engine.get_files_count() == 0:
             self.logger.debug("There are no files in directory %s" % self.source_dir)
-            print("Info window: There are no files")
+            messagebox.showinfo("Info", "There are no files in source directory")
             return
 
         if not self.music_engine.is_playing:
@@ -85,7 +85,7 @@ class MainWindow(Tk):
 
         self.file_engine.find_source_files(self.source_dir, self.music_engine.formats)
         if not self.file_engine.get_files_count():
-            print("Info window: There are no files")
+            messagebox.showinfo("Info", "There are no files in source directory")
         else:
             self.music_engine.current_file = self.file_engine.get_current_file()
         return
@@ -105,7 +105,7 @@ class MainWindow(Tk):
         self.logger.debug("Button LikeButton was presses")
 
         if not self.file_engine.get_files_count():
-            print("Info window: There are no more files in source directory")
+            messagebox.showinfo("Info", "There are no files in source directory")
             return
 
         if self.music_engine.is_playing:
@@ -125,7 +125,7 @@ class MainWindow(Tk):
         self.logger.debug("Button DislikeButton was presses")
 
         if not self.file_engine.get_files_count():
-            print("Info window: There are no more files in source directory")
+            messagebox.showinfo("Info", "There are no files in source directory")
             return
 
         if self.music_engine.is_playing:
