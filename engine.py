@@ -25,8 +25,6 @@ class FileEngine:
 
     def move_current_file(self, src, dest):
         """Move current file to specified directory"""
-        print("Moving file to the destination directory")
-
         curr_file = self.get_current_file()
         fullsrc = os.path.join(src, curr_file)
         fulldest = os.path.join(dest, curr_file)
@@ -40,11 +38,13 @@ class FileEngine:
 
         self.logger.debug("File %s was moved to directory %s" % (curr_file, dest))
         self.source_files.pop(0)
-        pass
 
-    def delete_current_file(self):
-        print("Deleting file")
-        self.logger.debug("File %s was deleted" % self.get_current_file())
+    def delete_current_file(self, src):
+        curr_file = self.get_current_file()
+        fullpath = os.path.join(src, curr_file)
+        os.remove(fullpath)
+
+        self.logger.debug("File %s was deleted" % curr_file)
         self.source_files.pop(0)
         pass
 

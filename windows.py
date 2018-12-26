@@ -124,14 +124,14 @@ class MainWindow(Tk):
     def onDislikeButtonClick(self):
         self.logger.debug("Button DislikeButton was presses")
 
-        if self.file_engine.get_files_count() == 0:
+        if not self.file_engine.get_files_count():
             print("Info window: There are no more files in source directory")
             return
 
         if self.music_engine.is_playing:
             self.music_engine.stop()
             self.playpauseButton["text"] = "play"
-        self.file_engine.delete_current_file()
+        self.file_engine.delete_current_file(self.source_dir)
 
         self.music_engine.current_file = self.file_engine.get_current_file()
         self.music_engine.play()
