@@ -43,10 +43,13 @@ class MainWindow(Tk):
         self.dislikebutton = Button(self, text="dislike", command=self.onDislikeButtonClick)
         self.dislikebutton.place(relx=0.6, rely=1.0, anchor="s")
 
+        self.logger.debug("The main window was configured")
         return
 
     def onPlayPauseButtonClick(self):
         self.logger.debug("PlayPauseButton was pressed")
+
+        """If no source and destination directories are selected"""
         if not self.source_dir:
             self.logger.debug("No chosen source directory. Redirecting to dialog window")
             self.onChooseSourceDirButtonClick()
@@ -56,8 +59,10 @@ class MainWindow(Tk):
         if not (self.source_dir and self.dest_dir):
             return
 
+        """If there are no files in source directory"""
         if self.file_engine.get_files_count() == 0:
-            print("There is no files")
+            self.logger.debug("There are no files in directory %s" % self.source_dir)
+            print("Info window: There are no files")
             return
 
         if not self.music_engine.is_playing:
@@ -79,8 +84,8 @@ class MainWindow(Tk):
         self.logger.debug("Choosed source directory: %s" % self.source_dir)
 
         self.file_engine.find_source_files(self.source_dir, self.music_engine.formats)
-        if self.file_engine.get_files_count() == 0:
-            print("There is no files")
+        if not self.file_engine.get_files_count():
+            print("Info window: There are no files")
         else:
             self.music_engine.current_file = self.file_engine.get_current_file()
         return
@@ -102,8 +107,8 @@ class MainWindow(Tk):
             self.music_engine.stop()
         self.file_engine.move_current_file(self.dest_dir)
 
-        if self.file_engine.get_files_count() == 0:
-            print("There is no files")
+        if not self.file_engine.get_files_count():
+            print("Info window: There are no more files in source directory")
             return
 
         self.music_engine.current_file = self.file_engine.get_current_file()
@@ -118,7 +123,7 @@ class MainWindow(Tk):
         self.file_engine.delete_current_file()
 
         if self.file_engine.get_files_count() == 0:
-            print("There is no files")
+            print("Info window: There are no more files in source directory")
             return
 
         self.music_engine.current_file = self.file_engine.get_current_file()

@@ -13,7 +13,7 @@ class MusicEngine:
 
     def play(self):
         self.is_playing = True
-        print("Music is playing!!!")
+        print("Playing file %s" % self.current_file)
         pass
 
     def pause(self):
@@ -23,5 +23,5 @@ class MusicEngine:
 
     def stop(self):
         self.is_playing = False
-        print("Music paused")
+        print("Music stopped")
         pass
