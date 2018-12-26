@@ -1,7 +1,9 @@
+import errno
 import log
+import os
 import random
 import re
-import os
+import shutil
 
 
 class FileEngine:
@@ -21,10 +23,22 @@ class FileEngine:
         self.logger.debug("Found %d files in directory %s and it's subdirectories" % (self.get_files_count(), path))
         return
 
-    def move_current_file(self, path):
+    def move_current_file(self, src, dest):
         """Move current file to specified directory"""
         print("Moving file to the destination directory")
-        self.logger.debug("File %s was moved to directory %s" % (self.get_current_file(), path))
+
+        curr_file = self.get_current_file()
+        fullsrc = os.path.join(src, curr_file)
+        fulldest = os.path.join(dest, curr_file)
+        if not os.path.exists(os.path.dirname(fulldest)):
+            try:
+                os.makedirs(os.path.dirname(fulldest))
+            except OSError as exc:
+                if exc.errno != errno.EEXIST:
+                    raise
+        shutil.move(fullsrc, fulldest)
+
+        self.logger.debug("File %s was moved to directory %s" % (curr_file, dest))
         self.source_files.pop(0)
         pass
 

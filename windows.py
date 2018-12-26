@@ -103,30 +103,36 @@ class MainWindow(Tk):
 
     def onLikeButtonClick(self):
         self.logger.debug("Button LikeButton was presses")
-        if self.music_engine.is_playing:
-            self.music_engine.stop()
-        self.file_engine.move_current_file(self.dest_dir)
 
         if not self.file_engine.get_files_count():
             print("Info window: There are no more files in source directory")
             return
 
-        self.music_engine.current_file = self.file_engine.get_current_file()
-        self.music_engine.play()
-        self.playpauseButton["text"] = "pause"
-        pass
-
-    def onDislikeButtonClick(self):
-        self.logger.debug("Button DislikeButton was presses")
         if self.music_engine.is_playing:
             self.music_engine.stop()
-        self.file_engine.delete_current_file()
+            self.playpauseButton["text"] = "play"
+        self.file_engine.move_current_file(self.source_dir, self.dest_dir)
 
-        if self.file_engine.get_files_count() == 0:
-            print("Info window: There are no more files in source directory")
+        if not self.file_engine.get_files_count():
+            self.music_engine.current_file = None
             return
 
         self.music_engine.current_file = self.file_engine.get_current_file()
         self.music_engine.play()
         self.playpauseButton["text"] = "pause"
-        pass
+
+    def onDislikeButtonClick(self):
+        self.logger.debug("Button DislikeButton was presses")
+
+        if self.file_engine.get_files_count() == 0:
+            print("Info window: There are no more files in source directory")
+            return
+
+        if self.music_engine.is_playing:
+            self.music_engine.stop()
+            self.playpauseButton["text"] = "play"
+        self.file_engine.delete_current_file()
+
+        self.music_engine.current_file = self.file_engine.get_current_file()
+        self.music_engine.play()
+        self.playpauseButton["text"] = "pause"
