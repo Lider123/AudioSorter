@@ -23,6 +23,7 @@ class MainWindow(Tk):
         self.like_button = None
         self.dislike_button = None
 
+        self.filename_label = None
         self.browse_downloads_label = None
         self.browse_liked_label = None
 
@@ -37,17 +38,20 @@ class MainWindow(Tk):
         self.resizable(0, 0)
         self["bg"] = "white"
 
+        self.filename_label = Label(text="file", bg="white")
+        self.filename_label.place(relx=0.5, rely=0.1, anchor="n")
+
         self.playpause_button = PlayPauseButton(self, bg="white", command=self.on_playpause_button_click)
         self.playpause_button.place(relx=0.5, rely=0.5, anchor="center")
 
-        self.choosesourcedir_button = Button(self, text="browse:", command=self.on_choosesourcedir_button_click)
+        self.choosesourcedir_button = Button(self, text="browse", command=self.on_choosesourcedir_button_click)
         self.choosesourcedir_button.place(relx=0.0, rely=1.0, anchor="sw")
-        self.browse_downloads_label = Label(text="Downloads dir", bg="white")
+        self.browse_downloads_label = Label(text="Downloads dir:", bg="white")
         self.browse_downloads_label.place(relx=0.0, rely=0.95, anchor="sw")
 
-        self.choosedestdir_button = Button(self, text="browse:", command=self.on_choosedestdir_button_click)
+        self.choosedestdir_button = Button(self, text="browse", command=self.on_choosedestdir_button_click)
         self.choosedestdir_button.place(relx=1.0, rely=1.0, anchor="se")
-        self.browse_liked_label = Label(text="Liked dir", bg="white")
+        self.browse_liked_label = Label(text="Liked dir:", bg="white")
         self.browse_liked_label.place(relx=1.0, rely=0.95, anchor="se")
 
         self.like_button = Button(self, text="like", command=self.on_like_button_click)
@@ -79,6 +83,7 @@ class MainWindow(Tk):
 
         if not self.music_engine.is_playing:
             self.music_engine.play()
+            self.filename_label["text"] = self.file_engine.get_current_file()
         else:
             self.music_engine.pause()
         return
@@ -91,6 +96,8 @@ class MainWindow(Tk):
         if not new_path:
             self.logger.debug("Source directory was not been chosen")
             return
+        else:
+            self.browse_downloads_label["text"] = "Downloads dir: " + new_path
 
         self.source_dir = new_path
         self.logger.debug("Choosed source directory: %s" % self.source_dir)
@@ -106,6 +113,8 @@ class MainWindow(Tk):
         if not new_path:
             self.logger.debug("Destination directory was not been chosen")
             return
+        else:
+            self.browse_liked_label["text"] = "Liked dir: " + new_path
 
         self.dest_dir = new_path
         self.logger.debug("Choosed destination directory: %s" % self.dest_dir)
@@ -142,8 +151,10 @@ class MainWindow(Tk):
         return
 
     def play_next(self):
-        self.music_engine.set_file(self.fullpath(self.file_engine.get_current_file()))
+        curr_file = self.file_engine.get_current_file()
+        self.music_engine.set_file(self.fullpath(curr_file))
         self.music_engine.play()
+        self.filename_label["text"] = curr_file
         return
 
     def stop_playing(self):
