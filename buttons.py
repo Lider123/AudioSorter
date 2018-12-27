@@ -27,6 +27,7 @@ class LikeButton(Button):
         self.like_img = PhotoImage(file="assets/like.png")
         self["image"] = self.like_img
 
+
 class DislikeButton(Button):
     def __init__(self, *args, **kwargs):
         super(DislikeButton, self).__init__(*args, **kwargs)
