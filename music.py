@@ -19,7 +19,7 @@ class MusicEngine:
             pygame.mixer.music.load(self.current_file)
         self.is_playing = False
         self.paused = False
-        self.master_button["text"] = "play"
+        self.master_button.set_play_img()
         return
 
     def play(self):
@@ -29,14 +29,14 @@ class MusicEngine:
         else:
             pygame.mixer.music.play(-1)
             self.logger.debug("Playing file %s" % self.current_file)
-        self.master_button["text"] = "pause"
+        self.master_button.set_pause_img()
         return
 
     def pause(self):
         self.is_playing = False
         self.paused = True
         pygame.mixer.music.pause()
-        self.master_button["text"] = "play"
+        self.master_button.set_play_img()
         self.logger.debug("Music paused")
         return
 
@@ -44,6 +44,6 @@ class MusicEngine:
         self.is_playing = False
         self.paused = False
         pygame.mixer.music.stop()
-        self.master_button["text"] = "play"
+        self.master_button.set_play_img()
         self.logger.debug("Music stopped")
         return
