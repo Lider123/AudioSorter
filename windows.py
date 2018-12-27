@@ -1,4 +1,4 @@
-from buttons import PlayPauseButton
+from buttons import DislikeButton, PlayPauseButton, LikeButton
 from engine import FileEngine
 from music import MusicEngine
 from tkinter import Label, Button, filedialog, messagebox, Tk
@@ -54,10 +54,10 @@ class MainWindow(Tk):
         self.browse_liked_label = Label(text="Liked dir:", bg="white")
         self.browse_liked_label.place(relx=1.0, rely=0.95, anchor="se")
 
-        self.like_button = Button(self, text="like", command=self.on_like_button_click)
+        self.like_button = LikeButton(self, bg="white", command=self.on_like_button_click)
         self.like_button.place(relx=0.4, rely=1.0, anchor="s")
 
-        self.dislike_button = Button(self, text="dislike", command=self.on_dislike_button_click)
+        self.dislike_button = DislikeButton(self, bg="white", command=self.on_dislike_button_click)
         self.dislike_button.place(relx=0.6, rely=1.0, anchor="s")
 
         self.logger.debug("The main window was configured")

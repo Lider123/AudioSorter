@@ -17,3 +17,20 @@ class PlayPauseButton(Button):
     def set_pause_img(self):
         self["image"] = self.pause_img
         return
+
+
+class LikeButton(Button):
+    def __init__(self, *args, **kwargs):
+        super(LikeButton, self).__init__(*args, **kwargs)
+        self["border"] = 0
+        self["highlightbackground"] = "white"
+        self.like_img = PhotoImage(file="assets/like.png")
+        self["image"] = self.like_img
+
+class DislikeButton(Button):
+    def __init__(self, *args, **kwargs):
+        super(DislikeButton, self).__init__(*args, **kwargs)
+        self["border"] = 0
+        self["highlightbackground"] = "white"
+        self.dislike_img = PhotoImage(file="assets/dislike.png")
+        self["image"] = self.dislike_img
