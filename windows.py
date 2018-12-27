@@ -16,48 +16,63 @@ class MainWindow(Tk):
 
         self.logger = log.logger
 
+        self.playpause_button = None
+        self.choosesourcedir_button = None
+        self.choosedestdir_button = None
+        self.like_button = None
+        self.dislike_button = None
+
+        self.browse_downloads_label = None
+        self.browse_liked_label = None
+
         self.setup()
 
         self.file_engine = FileEngine()
-        self.music_engine = MusicEngine(self.playpauseButton)
+        self.music_engine = MusicEngine(self.playpause_button)
 
     def setup(self):
         self.title("AudioSorter")
         self.geometry("%dx%d" % (self.WIDTH, self.HEIGHT))
         self.resizable(0, 0)
 
-        self.playpauseButton = Button(self, text="play", width=10, height=5, bg="black", fg="white", command=self.onPlayPauseButtonClick)
-        self.playpauseButton.place(relx=0.5, rely=0.5, anchor="center")
+        self.playpause_button = Button(self,
+                                       text="play",
+                                       width=10,
+                                       height=5,
+                                       bg="black",
+                                       fg="white",
+                                       command=self.on_playpause_button_click)
+        self.playpause_button.place(relx=0.5, rely=0.5, anchor="center")
 
-        self.choosesourcedirButton = Button(self, text="browse:", command=self.onChooseSourceDirButtonClick)
-        self.choosesourcedirButton.place(relx=0.0, rely=1.0, anchor="sw")
+        self.choosesourcedir_button = Button(self, text="browse:", command=self.on_choosesourcedir_button_click)
+        self.choosesourcedir_button.place(relx=0.0, rely=1.0, anchor="sw")
         self.browse_downloads_label = Label(text="Downloads dir")
         self.browse_downloads_label.place(relx=0.0, rely=0.95, anchor="sw")
 
-        self.choosedestdirButton = Button(self, text="browse:", command=self.onChooseDestDirButtonClick)
-        self.choosedestdirButton.place(relx=1.0, rely=1.0, anchor="se")
+        self.choosedestdir_button = Button(self, text="browse:", command=self.on_choosedestdir_button_click)
+        self.choosedestdir_button.place(relx=1.0, rely=1.0, anchor="se")
         self.browse_liked_label = Label(text="Liked dir")
         self.browse_liked_label.place(relx=1.0, rely=0.95, anchor="se")
 
-        self.likebutton = Button(self, text="like", command=self.onLikeButtonClick)
-        self.likebutton.place(relx=0.4, rely=1.0, anchor="s")
+        self.like_button = Button(self, text="like", command=self.on_like_button_click)
+        self.like_button.place(relx=0.4, rely=1.0, anchor="s")
 
-        self.dislikebutton = Button(self, text="dislike", command=self.onDislikeButtonClick)
-        self.dislikebutton.place(relx=0.6, rely=1.0, anchor="s")
+        self.dislike_button = Button(self, text="dislike", command=self.on_dislike_button_click)
+        self.dislike_button.place(relx=0.6, rely=1.0, anchor="s")
 
         self.logger.debug("The main window was configured")
         return
 
-    def onPlayPauseButtonClick(self):
+    def on_playpause_button_click(self):
         self.logger.debug("PlayPauseButton was pressed")
 
         """If no source and destination directories are selected"""
         if not self.source_dir:
             self.logger.debug("No chosen source directory. Redirecting to dialog window")
-            self.onChooseSourceDirButtonClick()
+            self.on_choosesourcedir_button_click()
         if not self.dest_dir:
             self.logger.debug("No chosen destination directory. Redirecting to dialog window")
-            self.onChooseDestDirButtonClick()
+            self.on_choosedestdir_button_click()
         if not (self.source_dir and self.dest_dir):
             return
 
@@ -72,7 +87,7 @@ class MainWindow(Tk):
             self.music_engine.pause()
         return
 
-    def onChooseSourceDirButtonClick(self):
+    def on_choosesourcedir_button_click(self):
         self.logger.debug("Button ChooseSourceDir was presses")
         self.stop_playing()
 
@@ -89,7 +104,7 @@ class MainWindow(Tk):
             self.music_engine.set_file(self.fullpath(self.file_engine.get_current_file()))
         return
 
-    def onChooseDestDirButtonClick(self):
+    def on_choosedestdir_button_click(self):
         self.logger.debug("Button ChooseDestDir was presses")
         new_path = filedialog.askdirectory(initialdir="~", title="Select destination directory", mustexist=True)
         if not new_path:
@@ -100,7 +115,7 @@ class MainWindow(Tk):
         self.logger.debug("Choosed destination directory: %s" % self.dest_dir)
         return
 
-    def onLikeButtonClick(self):
+    def on_like_button_click(self):
         self.logger.debug("Button LikeButton was presses")
 
         if not self.check_files_count():
@@ -115,7 +130,7 @@ class MainWindow(Tk):
             self.play_next()
         return
 
-    def onDislikeButtonClick(self):
+    def on_dislike_button_click(self):
         self.logger.debug("Button DislikeButton was presses")
 
         if not self.check_files_count():

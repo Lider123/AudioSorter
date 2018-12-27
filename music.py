@@ -27,7 +27,7 @@ class MusicEngine:
         if self.paused:
             pygame.mixer.music.unpause()
         else:
-            pygame.mixer.music.play()
+            pygame.mixer.music.play(-1)
             self.logger.debug("Playing file %s" % self.current_file)
         self.master_button["text"] = "pause"
         return
