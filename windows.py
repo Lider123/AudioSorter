@@ -36,28 +36,28 @@ class MainWindow(Tk):
         self.title("AudioSorter")
         self.geometry("%dx%d" % (self.WIDTH, self.HEIGHT))
         self.resizable(0, 0)
-        self["bg"] = "white"
+        self["bg"] = "#F7931A"
 
-        self.filename_label = Label(text="file", bg="white")
+        self.filename_label = Label(text="file", bg=self["bg"])
         self.filename_label.place(relx=0.5, rely=0.1, anchor="n")
 
-        self.playpause_button = PlayPauseButton(self, bg="white", command=self.on_playpause_button_click)
+        self.playpause_button = PlayPauseButton(self, bg=self["bg"], command=self.on_playpause_button_click)
         self.playpause_button.place(relx=0.5, rely=0.5, anchor="center")
 
         self.choosesourcedir_button = Button(self, text="browse", height=3, command=self.on_choosesourcedir_button_click)
         self.choosesourcedir_button.place(relx=0.0, rely=1.0, anchor="sw")
-        self.browse_downloads_label = Label(text="Downloads dir:", bg="white")
+        self.browse_downloads_label = Label(text="Downloads dir:", bg=self["bg"])
         self.browse_downloads_label.place(relx=0.0, rely=0.90, anchor="sw")
 
         self.choosedestdir_button = Button(self, text="browse", height=3, command=self.on_choosedestdir_button_click)
         self.choosedestdir_button.place(relx=1.0, rely=1.0, anchor="se")
-        self.browse_liked_label = Label(text="Liked dir:", bg="white")
+        self.browse_liked_label = Label(text="Liked dir:", bg=self["bg"])
         self.browse_liked_label.place(relx=1.0, rely=0.90, anchor="se")
 
-        self.like_button = LikeButton(self, bg="white", command=self.on_like_button_click)
+        self.like_button = LikeButton(self, bg=self["bg"], command=self.on_like_button_click)
         self.like_button.place(relx=0.4, rely=1.0, anchor="s")
 
-        self.dislike_button = DislikeButton(self, bg="white", command=self.on_dislike_button_click)
+        self.dislike_button = DislikeButton(self, bg=self["bg"], command=self.on_dislike_button_click)
         self.dislike_button.place(relx=0.6, rely=1.0, anchor="s")
 
         self.logger.debug("The main window was configured")
