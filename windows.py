@@ -60,11 +60,11 @@ class MainWindow(Tk):
         self.dislike_button = DislikeButton(self, bg=self["bg"], command=self.on_dislike_button_click)
         self.dislike_button.place(relx=0.6, rely=1.0, anchor="s")
 
-        self.logger.debug("The main window was configured")
+        self.logger.debug("The main window has been configured")
         return
 
     def on_playpause_button_click(self):
-        self.logger.debug("PlayPauseButton was pressed")
+        self.logger.debug("PlayPauseButton has been pressed")
 
         """If no source and destination directories are selected"""
         if not self.source_dir:
@@ -89,18 +89,18 @@ class MainWindow(Tk):
         return
 
     def on_choosesourcedir_button_click(self):
-        self.logger.debug("Button ChooseSourceDir was presses")
+        self.logger.debug("Button ChooseSourceDir has been pressed")
         self.stop_playing()
 
         new_path = filedialog.askdirectory(initialdir="~", title="Select source directory", mustexist=True)
         if not new_path:
-            self.logger.debug("Source directory was not been chosen")
+            self.logger.debug("Source directory has not been chosen")
             return
         else:
             self.browse_downloads_label["text"] = "Downloads dir: " + new_path
 
         self.source_dir = new_path
-        self.logger.debug("Choosed source directory: %s" % self.source_dir)
+        self.logger.debug("Chosen source directory: %s" % self.source_dir)
 
         self.file_engine.find_source_files(self.source_dir, self.music_engine.formats)
         if self.check_files_count():
@@ -108,25 +108,26 @@ class MainWindow(Tk):
         return
 
     def on_choosedestdir_button_click(self):
-        self.logger.debug("Button ChooseDestDir was presses")
+        self.logger.debug("Button ChooseDestDir has been pressed")
         new_path = filedialog.askdirectory(initialdir="~", title="Select destination directory", mustexist=True)
         if not new_path:
-            self.logger.debug("Destination directory was not been chosen")
+            self.logger.debug("Destination directory has not been chosen")
             return
         else:
             self.browse_liked_label["text"] = "Liked dir: " + new_path
 
         self.dest_dir = new_path
-        self.logger.debug("Choosed destination directory: %s" % self.dest_dir)
+        self.logger.debug("Chosen destination directory: %s" % self.dest_dir)
         return
 
     def on_like_button_click(self):
-        self.logger.debug("Button LikeButton was presses")
+        self.logger.debug("Button LikeButton has been pressed")
 
         if not self.check_files_count():
             return
 
         self.stop_playing()
+        self.music_engine.clear_mixer()
         self.file_engine.move_current_file(self.source_dir, self.dest_dir)
 
         if not self.file_engine.get_files_count():
@@ -136,12 +137,13 @@ class MainWindow(Tk):
         return
 
     def on_dislike_button_click(self):
-        self.logger.debug("Button DislikeButton was presses")
+        self.logger.debug("Button DislikeButton has been pressed")
 
         if not self.check_files_count():
             return
 
         self.stop_playing()
+        self.music_engine.clear_mixer()
         self.file_engine.delete_current_file(self.source_dir)
 
         if not self.file_engine.get_files_count():
@@ -164,7 +166,7 @@ class MainWindow(Tk):
 
     def check_files_count(self):
         if not self.file_engine.get_files_count():
-            messagebox.showinfo("Info", "There are no files in source directory")
+            messagebox.showinfo("Info", "There are no files in the source directory")
             self.filename_label["text"] = "file"
             return False
         return True

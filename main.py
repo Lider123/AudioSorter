@@ -12,6 +12,7 @@ class App:
         self.logger.debug("App started")
         main_window.mainloop()
 
+
 if __name__ == "__main__":
     instance = App()
     instance.run()

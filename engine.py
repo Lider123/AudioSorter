@@ -11,7 +11,7 @@ class FileEngine:
     def __init__(self):
         self.logger = log.logger
         self.source_files = list()
-        self.logger.debug("File engine started")
+        self.logger.debug("File engine has been started")
 
     def find_source_files(self, path, formats):
         """Find all files of specified formats in the specified directory and subdirectories"""
@@ -37,17 +37,25 @@ class FileEngine:
                     raise
         shutil.move(fullsrc, fulldest)
 
-        self.logger.debug("File %s was moved to directory %s" % (curr_file, dest))
+        self.logger.debug("File %s has been moved to directory %s" % (curr_file, dest))
         self.source_files.pop(0)
+        return
 
     def delete_current_file(self, src):
         curr_file = self.get_current_file()
         fullpath = os.path.join(src, curr_file)
-        send2trash(fullpath)
+        fulltrash = os.path.join("C:\\Users\\User\\AudioSorterTrash", curr_file)
+        if not os.path.exists(os.path.dirname(fulltrash)):
+            try:
+                os.makedirs(os.path.dirname(fulltrash))
+            except OSError as exc:
+                if exc.errno != errno.EEXIST:
+                    raise
+        shutil.move(fullpath, fulltrash)
 
-        self.logger.debug("File %s was deleted" % curr_file)
+        self.logger.debug("File %s has been deleted" % curr_file)
         self.source_files.pop(0)
-        pass
+        return
 
     def get_current_file(self):
         return self.source_files[0]

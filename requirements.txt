@@ -1,2 +1,4 @@
+cx_Freeze
+idna
 pygame
 Send2Trash
